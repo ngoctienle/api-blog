@@ -1,4 +1,4 @@
-import App from './app'
+import { ExApp } from './app'
 
-/* Start Server */
-App.startServer()
+/* ExpressApp */
+ExApp.use

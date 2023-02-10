@@ -8,9 +8,11 @@ import envConfig from './utils/validate'
 
 class AppInit {
   public express: express.Application
+  public router: express.Router
 
   constructor() {
     this.express = express()
+    this.router = this.express._router
 
     this.middlewares()
   }
@@ -37,5 +39,7 @@ class AppInit {
 }
 
 const App = new AppInit()
+export const ExApp = App.express
+export const ExRouter = App.router
 
-export default App
+App.startServer()
