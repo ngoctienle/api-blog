@@ -1,4 +1,6 @@
-import { ExApp } from './app'
+import { ExApp } from './configs/app.config'
+
+import authRoute from './routes/auth.route'
 
 /* ExpressApp */
-ExApp.use
+ExApp.use('/api/auth', authRoute)

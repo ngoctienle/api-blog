@@ -1,20 +1,21 @@
-import express from 'express'
-import * as mongoose from 'mongoose'
+import express, { Application, Router } from 'express'
+import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import 'dotenv/config'
 
-import envConfig from './utils/validate'
+import envConfig from '../utils/validate'
 
 class AppInit {
-  public express: express.Application
-  public router: express.Router
+  public express: Application
+  public router: Router
 
   constructor() {
     this.express = express()
-    this.router = this.express._router
+    this.router = Router()
 
     this.middlewares()
+    this.startServer()
   }
 
   private middlewares(): void {
@@ -23,14 +24,12 @@ class AppInit {
     this.express.use(bodyParser.json({ limit: '10mb' }))
     this.express.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }))
   }
-
-  /* Call Global */
-  public startServer(): void {
+  private startServer(): void {
     mongoose
       .set('strictQuery', false)
       .connect(envConfig.MONGODB_URL)
       .then(() => {
-        this.express.listen(envConfig.PORT || 2399, () => {
+        ExApp.listen(envConfig.PORT || 2399, () => {
           console.log('Backend is running. MongoDB Connected!')
         })
       })
@@ -39,7 +38,6 @@ class AppInit {
 }
 
 const App = new AppInit()
+
 export const ExApp = App.express
 export const ExRouter = App.router
-
-App.startServer()
