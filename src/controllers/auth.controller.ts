@@ -1,24 +1,19 @@
 import { RequestHandler } from 'express'
-
 import bcryptHash from '../configs/bcrypt.config'
-import { User } from '../models/user.model'
 
-import { RegisterBodyRequest } from './../types/auth.type'
+import { LoginBodyRequest, RegisterBodyRequest } from './../types/auth.type'
 import { APIResponse } from '../types/util.type'
 
-import HttpStatusCode from '../constants/httpStatusCode.constant'
 import { isStrongPassword, isValidateEmail } from '../utils/rules'
+import HttpStatusCode from '../constants/httpStatusCode.constant'
+import { UserCollection } from '../models/user.model'
 
-export const RegisterController: RequestHandler<
-  unknown,
-  APIResponse,
-  RegisterBodyRequest,
-  unknown
-> = async (request, response) => {
+const RegisterAction: RequestHandler<unknown, APIResponse, RegisterBodyRequest, unknown> = async (
+  request,
+  response
+) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = request.body
-    const hashedPw = await bcryptHash.hash(password)
-
     /* Check Dependency */
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
       response.status(HttpStatusCode.FailedDependency).json({
@@ -33,7 +28,8 @@ export const RegisterController: RequestHandler<
         message: 'Email is invalid'
       })
     }
-    const isExistEmail = await User.findOne({ email: email }).exec()
+    const isExistEmail = await UserCollection.findOne({ email: email }).exec()
+
     if (isExistEmail) {
       response.status(HttpStatusCode.FailedDependency).json({
         status: HttpStatusCode.FailedDependency,
@@ -55,34 +51,37 @@ export const RegisterController: RequestHandler<
       }
     }
 
+    const hashedPw = await bcryptHash.hash(password)
     /* Check First-Time Admin Used */
-    const users = await User.find()
-    if (users.length > 0) {
-      const newUser = new User({
+    const userList = await UserCollection.find()
+    if (userList.length > 0) {
+      const newUser = new UserCollection({
         firstName: firstName,
         lastName: lastName,
         email: email,
         password: hashedPw,
-        role: 'User'
+        role: 0
       })
       await newUser.save()
+
       response.status(HttpStatusCode.Created).json({
         status: HttpStatusCode.Created,
         message: 'Create Account Successfully',
         data: newUser
       })
     } else {
-      const newUser = new User({
+      const newUser = new UserCollection({
         firstName: firstName,
         lastName: lastName,
         email: email,
         password: hashedPw,
-        role: 'Admin'
+        role: 1
       })
       await newUser.save()
+
       response.status(HttpStatusCode.Created).json({
         status: HttpStatusCode.Created,
-        message: 'Create Account Successfully',
+        message: 'Create Admin Successfully',
         data: newUser
       })
     }
@@ -94,19 +93,42 @@ export const RegisterController: RequestHandler<
   }
 }
 
-/* export const LoginController: RequestHandler = async (request: Request, response: Response) => {
+const LoginAction: RequestHandler<unknown, APIResponse, LoginBodyRequest, unknown> = async (
+  request,
+  response
+) => {
   try {
-    const user = await UserModel.findOne({ username: request.body.username })
+    const { email, password } = request.body
+    const user = await UserCollection.findOne({ email: email })
     if (!user) {
-      return response.status(HttpStatusCode.NotFound).json('Wrong Credentials!')
+      response.status(HttpStatusCode.FailedDependency).json({
+        status: HttpStatusCode.FailedDependency,
+        message: 'Email or Password is not correct!'
+      })
+    } else {
+      const validatePw = bcryptHash.compare(password, user.password)
+      if (!validatePw) {
+        response.status(HttpStatusCode.FailedDependency).json({
+          status: HttpStatusCode.FailedDependency,
+          message: 'Email or Password is not correct!'
+        })
+      }
+      response.status(HttpStatusCode.Ok).json({
+        status: HttpStatusCode.Ok,
+        message: 'Login success'
+      })
     }
-    const validatePw = bcryptHash.compare(request.body.password, user.password)
-    if (!validatePw) {
-      return response.status(HttpStatusCode.NotFound).json('Wrong Credentials!')
-    }
-    const { ...others } = user.__v
-    response.status(HttpStatusCode.Ok).json(others)
   } catch (error) {
-    response.status(HttpStatusCode.BadRequest).json(error)
+    response.status(HttpStatusCode.BadRequest).json({
+      status: HttpStatusCode.BadRequest,
+      message: 'Bad Request'
+    })
   }
-} */
+}
+
+const AuthController = {
+  RegisterAction,
+  LoginAction
+}
+
+export default AuthController

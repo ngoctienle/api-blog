@@ -3,4 +3,4 @@ import { ExApp } from './configs/app.config'
 import authRoute from './routes/auth.route'
 
 /* ExpressApp */
-ExApp.use('/api/', authRoute)
+ExApp.use('/api', authRoute)

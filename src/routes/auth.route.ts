@@ -1,10 +1,11 @@
 import { ExRouter } from '../configs/app.config'
-import { RegisterController } from '../controllers/auth.controller'
+import AuthController from '../controllers/auth.controller'
+import authorization from '../middlewares/auth.middlewares'
 
 /* Register API */
-ExRouter.post('/register', RegisterController)
+ExRouter.post('/register', authorization, AuthController.RegisterAction)
 
 /* SignIn API */
-/* ExRouter.post('/login', LoginController) */
+ExRouter.post('/login', AuthController.LoginAction)
 
 export default ExRouter

@@ -4,5 +4,9 @@ export type RegisterBodyRequest = {
   email: string
   password: string
   confirmPassword: string
-  role?: string
+}
+
+export type LoginBodyRequest = {
+  email: string
+  password: string
 }
