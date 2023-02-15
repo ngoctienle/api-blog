@@ -5,7 +5,7 @@ interface IUser extends mongoose.Document {
   lastName: string
   email: string
   password: string
-  confirmPassword: string
+  role: number
 }
 
 const userSchema = new mongoose.Schema({
@@ -33,4 +33,4 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-export const UserCollection = mongoose.model<IUser>('User', userSchema)
+export const UserModel = mongoose.model<IUser>('User', userSchema)

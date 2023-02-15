@@ -1,6 +1,8 @@
 import { ExRouter } from '../configs/app.config'
-import AuthController from '../controllers/auth.controller'
+
 import authorization from '../middlewares/auth.middlewares'
+
+import AuthController from '../controllers/auth.controller'
 
 /* Register API */
 ExRouter.post('/register', authorization, AuthController.RegisterAction)

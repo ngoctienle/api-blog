@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express'
-
 import 'dotenv/config'
-import envConfig from '../utils/validate'
 
 import { APIResponse } from '../types/util.type'
+import envConfig from '../utils/validate'
+
 import HttpStatusCode from '../constants/httpStatusCode.constant'
 
 const jwtSerect = envConfig.SECRECT_JWT
