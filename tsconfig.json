@@ -2,19 +2,13 @@
   "compilerOptions": {
     "target": "ES2016",
     "module": "CommonJS",
-    "typeRoots": [
-      "node_modules/@types",
-      "@types"
-    ],
     "outDir": "./dist",
     "strict": true,
+    "typeRoots": ["node_modules/@types", "@types"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "ts-node": {
-    "files": true
-  },
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["./src/**/*.ts"]
 }
