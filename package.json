@@ -2,7 +2,6 @@
   "name": "api-blog-nextjs",
   "version": "1.0.0",
   "description": "A Full Features API Function For Blogs/News App",
-  "main": "dist/app.js",
   "author": "Ngoc Tien Le <hi@bravethinking.io>",
   "license": "MIT",
   "scripts": {
