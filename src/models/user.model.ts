@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import * as mongoose from 'mongoose'
 
 interface IUser extends mongoose.Document {
   firstName: string
