@@ -10,7 +10,9 @@
     "strict": true,
     "outDir": "dist",
     "rootDir": "src",
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noEmit": true
   },
   "references": []
 }
