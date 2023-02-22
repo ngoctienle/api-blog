@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "NODE_PATH=./dist node dist/index.js",
     "build": "tsc",
     "dev": "nodemon src/index.ts",
     "lint": "eslint --ext .ts src/",
